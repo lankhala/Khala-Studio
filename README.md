@@ -1,2 +1,2 @@
-# Khala-Studio
-Designed by Khala
+# Designed by Khala
+khala project
