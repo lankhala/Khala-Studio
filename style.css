@@ -1,3 +1,7 @@
+.home-screen {
+  overflow: hidden; /* prevent scrolling on home */
+}
+
 @font-face {
   font-family: 'SFPRODISPLAYREGULAR';
   src: url('SFPRODISPLAYREGULAR.OTF') format('opentype');
@@ -29,6 +33,7 @@ body {
 }
 
 .phone {
+    overflow: hidden;
   width: min(430px, 100vw);
   aspect-ratio: 9 / 19.5;
   border-radius: 36px;
@@ -179,11 +184,12 @@ body {
 
 /* ===== APP PANEL (FULL PHONE) ===== */
 .app-panel {
+    overflow: auto;
   --ox: 50%;
   --oy: 50%;
   position: absolute;
   inset: 0;
-  background: #00aaff;
+  background: #00ff4c;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -203,18 +209,6 @@ body {
   transform: scale(1);
   pointer-events: auto;
 }
-
-.app-header {
-  height: 52px;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0, 68, 255, 0.96);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  flex-shrink: 0;
-}
-
 .back-btn {
   width: 26px;
   height: 26px;
@@ -708,6 +702,7 @@ body {
 
 /* Phone container: behave like a normal page section on mobile */
 .phone {
+    overflow: hidden;
   width: 100%;
   max-width: 480px;
   min-height: 100vh;
@@ -1225,13 +1220,6 @@ button:hover {
   width: 100%;
 }
 
-.sm-splash{
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at top, #1d4ed8, #020617);
-}
 
 .sm-splash-inner{
   text-align: center;
@@ -1489,3 +1477,14 @@ button:hover {
   margin-top: 8px;
   cursor: pointer;
 }
+
+
+
+
+
+
+
+
+
+
+

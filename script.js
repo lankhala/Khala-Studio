@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var currentAppId = null;
   var smSplashTimer = null;
 
+  // lock scroll initially on home
+  document.body.style.overflow = 'hidden';
+
   function setPanelOriginFromIcon(iconEl) {
     if (!phoneElem || !appPanel || !iconEl) return;
     var phoneRect = phoneElem.getBoundingClientRect();
@@ -87,6 +90,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (appPanel) {
       appPanel.classList.add('open');
     }
+
+    // allow scrolling inside apps
+    document.body.style.overflow = 'auto';
   }
 
   function closeApp() {
@@ -99,6 +105,9 @@ document.addEventListener('DOMContentLoaded', function () {
       appPanel.classList.remove('open');
     }
     currentAppId = null;
+
+    // lock scroll again when back to home
+    document.body.style.overflow = 'hidden';
   }
 
   // click apps on home
@@ -145,6 +154,16 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   });
+
+
+
+
+
+
+
+
+
+
 
   // ===== SM Digital slider =====
   var heroTrack = document.querySelector('.app-page[data-app-page="sm-digital"] .sm-hero-track');
