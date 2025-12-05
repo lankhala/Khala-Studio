@@ -1,235 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="km">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Khala Space</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Khala Space — SM Digital</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="phone">
+  <div class="phone" role="application" aria-label="Phone mock">
     <div class="home-screen">
-
-      <!-- ===== HOME CONTENT (icons) ===== -->
       <div class="home-content">
         <div class="apps-carousel">
           <div class="apps-page">
-            <div class="apps-grid">
-              <a href="#" class="app" data-app="sm-digital">
-                <div class="app-icon"><img src="a1.png" alt=""></div>
-                <span>SM Digital</span>
-              </a>
-
-              <a href="#" class="app" data-app="design">
-                <div class="app-icon"><img src="a2.png" alt=""></div>
-                <span>Design</span>
-              </a>
-
-              <a href="#" class="app" data-app="program">
-                <div class="app-icon"><img src="a3.png" alt="" ></div>
-                <span>Program</span>
-              </a>
-
-              <a href="#" class="app" data-app="library">
-                <div class="app-icon"><img src="a4.png" alt=""></div>
-                <span>Library</span>
-              </a>
-
-              <a href="#" class="app" data-app="software">
-                <div class="app-icon"><img src="a5.png" alt=""></div>
-                <span>Software</span>
-              </a>
-
-              <a href="#" class="app" data-app="freelance">
-                <div class="app-icon"><img src="a6.png" alt=""></div>
-                <span>Freelance</span>
-              </a>
-
-              <a href="#" class="app" data-app="png">
-                <div class="app-icon"><img src="a7.png" alt=""></div>
-                <span>PNG</span>
-              </a>
-
-              <a href="#" class="app" data-app="news">
-                <div class="app-icon"><img src="a8.png" alt=""></div>
-                <span>News</span>
-              </a>
+            <div class="apps-grid" aria-hidden="false">
+              <a href="#" class="app" data-app="sm-digital"><div class="app-icon"><img src="a1.png" alt="SM Digital" loading="lazy"></div><span>SM Digital</span></a>
+              <a href="#" class="app" data-app="design"><div class="app-icon"><img src="a2.png" alt="Design" loading="lazy"></div><span>Design</span></a>
+              <a href="#" class="app" data-app="program"><div class="app-icon"><img src="a3.png" alt="Program" loading="lazy"></div><span>Program</span></a>
+              <a href="#" class="app" data-app="library"><div class="app-icon"><img src="a4.png" alt="Library" loading="lazy"></div><span>Library</span></a>
+              <a href="#" class="app" data-app="software"><div class="app-icon"><img src="a5.png" alt="Software" loading="lazy"></div><span>Software</span></a>
+              <a href="#" class="app" data-app="freelance"><div class="app-icon"><img src="a6.png" alt="Freelance" loading="lazy"></div><span>Freelance</span></a>
+              <a href="#" class="app" data-app="png"><div class="app-icon"><img src="a7.png" alt="PNG" loading="lazy"></div><span>PNG</span></a>
+              <a href="#" class="app" data-app="news"><div class="app-icon"><img src="a8.png" alt="News" loading="lazy"></div><span>News</span></a>
             </div>
           </div>
         </div>
 
-        <div class="page-dots">
-          <span></span>
-        </div>
+        <div class="page-dots"><span></span></div>
+
         <div class="dock">
-          <div class="dock-icon"><img src="f1.png" alt=""></div>
-          <div class="dock-icon"><img src="f3.png" alt=""></div>
-          <div class="dock-icon"><img src="f2.png" alt=""></div>
-          <div class="dock-icon"><img src="f4.png" alt=""></div>
+          <div class="dock-icon"><img src="f1.png" alt="" loading="lazy"></div>
+          <div class="dock-icon"><img src="f3.png" alt="" loading="lazy"></div>
+          <div class="dock-icon"><img src="f2.png" alt="" loading="lazy"></div>
+          <div class="dock-icon"><img src="f4.png" alt="" loading="lazy"></div>
         </div>
       </div>
 
-      <!-- ===== FULL APP PANEL ===== -->
-      <div class="app-panel">
-        <div class="app-header">
-  <button class="back-btn" type="button">
-    <img src="backicon.png" alt="Back">
-  </button>
-</div>
+      <!-- Single APP PANEL used for all apps -->
+      <div class="app-panel" aria-hidden="true">
+        <!-- fixed back button remains here, pinned and non-scrolling -->
+        <button class="back-btn fixed" type="button" aria-label="Back to home">
+          <img src="backicon.png" alt="" loading="lazy">
+        </button>
 
-        <div class="app-more-sheet">
-          <div class="app-more-sheet-inner">
-            <div class="app-more-title">More options</div>
-            <button type="button" class="app-more-item">Help &amp; Support</button>
-            <button type="button" class="app-more-item">Contact SM Digital</button>
-            <button type="button" class="app-more-item app-more-close">Close</button>
-          </div>
-        </div>
+        <!-- NOTE: header/title removed as requested -->
 
-        <div class="app-body">
-          <!-- SM DIGITAL (FULL SCREEN) -->
-          <div class="app-page app-page-full" data-app-page="sm-digital">
-            <div class="sm-root">
-              <!-- Splash screen -->
-              <div class="">
-                <div class="sm-splash-inner">
-                </div>
-              </div>
-
-              <!-- Main content -->
-              <div class="sm-main sm-main-hidden">
-                <div class="sm-main-scroll">
-                  <!-- Hero banner slider 3x4 -->
-                  <section class="sm-hero-slider">
-                    <div class="sm-hero-track">
-                      <div class="sm-hero-slide sm-hero-slide-1"></div>
-                      <div class="sm-hero-slide sm-hero-slide-2"></div>
-                      <div class="sm-hero-slide sm-hero-slide-3"></div>
-                    </div>
-                    <div class="sm-hero-dots">
-                      <span class="active"></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                  </section>
-
-                  <!-- Product list -->
-                  <section class="sm-product-list">
-                    <article class="sm-product-item" data-product="Canva Pro 1 Year" data-price="$4" data-description="Official Canva Pro license (1 user / 1 year)." data-telegram-text="Hello SM service! Canva Pro 1 Year">
-                      <div class="sm-product-left">
-                        <div class="sm-product-icon">
-                          <img src="canva.webp" alt="Canva Pro">
-                        </div>
-                        <div class="sm-product-info">
-                          <div class="sm-product-name">Canva Pro 1 Year</div>
-                          <div class="sm-product-price">$4</div>
-                        </div>
-                      </div>
-                      <button class="sm-product-buy" type="button">
-                        <img src="buyicon.png" alt="Buy">
-                      </button>
-                    </article>
-
-                    <article class="sm-product-item" data-product="SM POS Setup" data-price="$15" data-description="POS setup service for small shop, include basic report & guide." data-telegram-text="Hello SM service! SM POS Setup">
-                      <div class="sm-product-left">
-                        <div class="sm-product-icon">
-                          <img src="smpos.jpg" alt="POS">
-                        </div>
-                        <div class="sm-product-info">
-                          <div class="sm-product-name">SM POS Setup</div>
-                          <div class="sm-product-price">$15</div>
-                        </div>
-                      </div>
-                      <button class="sm-product-buy" type="button">
-                        <img src="buyicon.png" alt="Buy">
-                      </button>
-                    </article>
-
-                    <article class="sm-product-item" data-product="Logo & Branding Pack" data-price="$25" data-description="Simple logo + basic brand kit for small business." data-telegram-text="Hello SM service! Logo & Branding Pack">
-                      <div class="sm-product-left">
-                        <div class="sm-product-icon">
-                          <img src="bag.png" alt="Branding">
-                        </div>
-                        <div class="sm-product-info">
-                          <div class="sm-product-name">Logo & Branding Pack</div>
-                          <div class="sm-product-price">$25</div>
-                        </div>
-                      </div>
-                      <button class="sm-product-buy" type="button">
-                        <img src="buyicon.png" alt="Buy">
-                      </button>
-                    </article>
-
-                    <article class="sm-product-item" data-product="Social Media Design 10x" data-price="$18" data-description="10 social media designs for Facebook / IG." data-telegram-text="Hello SM service! Social Media Design 10x">
-                      <div class="sm-product-left">
-                        <div class="sm-product-icon">
-                          <img src="n3.png" alt="Social Pack">
-                        </div>
-                        <div class="sm-product-info">
-                          <div class="sm-product-name">Social Media Design 10x</div>
-                          <div class="sm-product-price">$18</div>
-                        </div>
-                      </div>
-                      <button class="sm-product-buy" type="button">
-                        <img src="buyicon.png" alt="Buy">
-                      </button>
-                    </article>
-
-                    <article class="sm-product-item" data-product="Website Landing Page" data-price="$39" data-description="Simple one page landing website for campaign or product." data-telegram-text="Hello SM service! Website Landing Page">
-                      <div class="sm-product-left">
-                        <div class="sm-product-icon">
-                          <img src="b1.jpg" alt="Website">
-                        </div>
-                        <div class="sm-product-info">
-                          <div class="sm-product-name">Website Landing Page</div>
-                          <div class="sm-product-price">$39</div>
-                        </div>
-                      </div>
-                      <button class="sm-product-buy" type="button">
-                        <img src="buyicon.png" alt="Buy">
-                      </button>
-                    </article>
-                  </section>
-                </div>
-
-                <!-- Detail overlay -->
-                <div class="sm-detail">
-                  <div class="sm-detail-overlay"></div>
-                  <div class="sm-detail-sheet">
-                    <button class="sm-detail-back" type="button">
-                      <img src="backicon.png" alt="Back">
-                    </button>
-                    <div class="sm-detail-body">
-                      <div class="sm-detail-images">
-                        <!-- you can replace or duplicate these img tags -->
-                        <div class="sm-detail-img-slot"></div>
-                        <div class="sm-detail-img-slot"></div>
-                        <div class="sm-detail-img-slot"></div>
-                        <div class="sm-detail-img-slot"></div>
-                        <div class="sm-detail-img-slot"></div>
-                      </div>
-                      <div class="sm-detail-text-block">
-                        <div class="sm-detail-name">Product name</div>
-                        <div class="sm-detail-price">$0</div>
-                        <p class="sm-detail-text">
-                          Simple detail text about this product. You can edit this text in HTML.
-                        </p>
-                      </div>
-                      <button class="sm-detail-buy sm-primary-btn-lg" type="button">
-                        Buy Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
+        <!-- inner scrolling area -->
+        <div class="app-body" role="main">
+          <div class="app-inner">
+            <div class="app-content">
+              <div class="app-placeholder">
+                <p class="muted">Select an app to open.</p>
               </div>
             </div>
           </div>
+        </div>
 
+      </div>
 
-          
+    </div>
+  </div>
 
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="script.js"></script>
 </body>
 </html>
