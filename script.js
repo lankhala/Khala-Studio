@@ -1,10 +1,8 @@
-// script.js — updated: SM Digital panel renders an internal apps-grid that matches homepage layout (4 per row).
-// Internal anchors use same markup (.app + .app-icon + <span>) but are created only inside the panel.
-// Clicks on those internal anchors open the bottom-sheet detail (square image). Home icons remain unchanged.
+// script.js — updated so dynamically-rendered app lists inside the panel use
+// the same .liquidGlass-wrapper markup as the homepage icons.
 
 document.addEventListener('DOMContentLoaded', function () {
   var phoneElem = document.querySelector('.phone');
-  // capture only the home-level app anchors (initial, direct children of the top .apps-grid)
   var homeAppIcons = Array.from(document.querySelectorAll('.apps-grid > a.app'));
   var appPanel = document.querySelector('.app-panel');
   var backBtn = document.querySelector('.back-btn.fixed');
@@ -16,33 +14,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var TELEGRAM_BASE = 'https://t.me/smservicekh';
 
-  // SM Digital data (items shown as apps inside the panel)
-  // NOTE: added detailImg for the larger / alternate image shown in the 1x1 detail sheet.
   var DATA = {
     'sm-digital': [
       { id: 'a1', name: 'Canva Pro', img: 'canvalogo.png', detailImg: 'canva.jpg', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a2', name: 'Gemini Pro', img: 'geminilogo.png', detailImg: 'gemini.jpg', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a3', name: 'CapCut Pro', img: 'capcutlogo.png', detailImg: 'capcut.png', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a4', name: 'Freepik', img: 'freepiklogo.png', detailImg: 'freepik.png', telegramUrl: 'https://t.me/smservicekh' },
-      
       { id: 'a5', name: 'ChatGPT', img: 'chatgptlogo.png', detailImg: 'chatgpt.png', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a6', name: 'Window11', img: 'windowlogo.png', detailImg: 'window.jpg', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a7', name: 'Netflix', img: 'netflixlogo.png', detailImg: 'netflix.jpg', telegramUrl: 'https://t.me/smservicekh' },
-      { id: 'a8', name: 'Adobe', img: 'adobelogo.png', detailImg: 'adobe.png', telegramUrl: 'https://t.me/smservicekh' },
-
-      { id: 'a9', name: 'Flow AI', img: 'flowlogo.png', detailImg: 'flow.png', telegramUrl: 'https://t.me/smservicekh' },
-      { id: 'a10', name: 'Office365', img: 'office365logo.png', detailImg: 'office365.png', telegramUrl: 'https://t.me/smservicekh' },
-      { id: 'a11', name: 'YouTube', img: 'youtubelogo.png', detailImg: 'youtube.png', telegramUrl: 'https://t.me/smservicekh' },
-      { id: 'a12', name: 'IDM', img: 'idmlogo.png', detailImg: 'idm.png', telegramUrl: 'https://t.me/smservicekh' }
+      { id: 'a8', name: 'Adobe', img: 'adobelogo.png', detailImg: 'adobe.png', telegramUrl: 'https://t.me/smservicekh' }
     ],
-    // other apps (kept simple)
-    'design': [],
-    'program': [],
-    'library': [],
-    'software': [],
-    'freelance': [],
-    'png': [],
-    'news': []
+    'design': [], 'program': [], 'library': [], 'software': [], 'freelance': [], 'png': [], 'news': []
   };
 
   function escapeHtml(s) {
@@ -82,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     appPanel.classList.remove('open');
     appPanel.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = '';
     currentApp = null;
   }
 
@@ -105,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
       + '</div>';
     document.body.appendChild(detail);
 
-    // overlay click closes
     detail.querySelector('.sm-detail-overlay').addEventListener('click', function () {
       closeDetail();
     }, { passive: true });
@@ -115,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
       window.open(url, '_blank');
     });
 
-    // make sheet draggable
     initSheetDrag(detail.querySelector('.sm-detail-sheet'));
   }
 
@@ -126,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var descEl = detail.querySelector('.sm-detail-desc');
     var buyBtn = detail.querySelector('.sm-detail-buy');
 
-    // Prefer detailImg (alternate/large image) if provided, otherwise fall back to item.img (the small/logo)
     var detailSrc = item.detailImg || item.img || '';
 
     if (detailSrc) {
@@ -148,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     buyBtn.dataset.telegramUrl = tg;
 
-    // reset inline transform and open
     var sheet = detail.querySelector('.sm-detail-sheet');
     sheet.style.transition = '';
     sheet.style.transform = '';
@@ -166,10 +145,11 @@ document.addEventListener('DOMContentLoaded', function () {
     sheet.style.transform = '';
     detail.classList.remove('open');
     detail.setAttribute('aria-hidden', 'true');
-    setTimeout(function () {}, 320);
+    if (!appPanel.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
   }
 
-  /* render per app (SM Digital uses same apps-grid markup as home) */
   function renderAppContent(appId) {
     appContent.innerHTML = '';
     if (appId === 'sm-digital') renderSmDigitalUsingTemplate();
@@ -177,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function renderSmDigitalUsingTemplate() {
-    // create a grid with the exact same markup as homepage .apps-grid
     var grid = document.createElement('div');
     grid.className = 'apps-grid';
     grid.setAttribute('aria-hidden', 'false');
@@ -185,28 +164,38 @@ document.addEventListener('DOMContentLoaded', function () {
     DATA['sm-digital'].forEach(function (p) {
       var a = document.createElement('a');
       a.href = '#';
-      a.className = 'app1';
-      // mark internal id so home-level listeners (which were bound at load) won't accidentally handle these
+      a.className = 'app';
       a.setAttribute('data-item', p.id);
+
+      // Use identical markup to home icons: .app-icon > .liquidGlass-wrapper > layers + img
       a.innerHTML = ''
-        + '<div class="app-icon1"><img src="' + p.img + '" alt="' + escapeHtml(p.name) + '" loading="lazy" draggable="false"></div>'
+        + '<div class="app-icon">'
+        +   '<div class="liquidGlass-wrapper">'
+        +     '<div class="liquidGlass-effect"></div>'
+        +     '<div class="liquidGlass-tint"></div>'
+        +     '<div class="liquidGlass-shine"></div>'
+        +     '<div class="liquidGlass-text"><img src="' + escapeHtml(p.img) + '" alt="' + escapeHtml(p.name) + '" loading="lazy" draggable="false"></div>'
+        +   '</div>'
+        + '</div>'
         + '<span>' + escapeHtml(p.name) + '</span>';
+
       grid.appendChild(a);
     });
 
     appContent.appendChild(grid);
 
-    // bind clicks for internal anchors only (prevent propagation to home anchors)
+    // bind clicks for internal anchors only
     grid.addEventListener('click', function (e) {
-      var a = e.target.closest('a.app1');
+      var a = e.target.closest('a.app');
       if (!a) return;
+      if (!appContent.contains(a)) return;
       e.preventDefault();
       e.stopPropagation();
       var id = a.getAttribute('data-item');
       var item = DATA['sm-digital'].find(function (x) { return x.id === id; });
       if (!item) return;
       openDetailFor(item);
-    }, { passive: true });
+    }, { passive: false });
   }
 
   function renderEmpty(appId) {
@@ -218,16 +207,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function capitalize(s) { return String(s).charAt(0).toUpperCase() + String(s).slice(1); }
 
-  // bind only the original home icons to open the panel
+  // bind home icons to open the panel
   homeAppIcons.forEach(function (el) {
     el.addEventListener('click', function (ev) {
       ev.preventDefault();
       var id = el.getAttribute('data-app') || 'app1';
       openPanelForApp(id, el);
-    }, { passive: true });
+    }, { passive: false });
   });
 
-  // back button
   if (backBtn) {
     backBtn.addEventListener('click', function () {
       var det = document.querySelector('.sm-detail.open');
@@ -236,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // esc key closes
   window.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       var det = document.querySelector('.sm-detail.open');
@@ -245,15 +232,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // keep body locked on home initially
-  document.body.style.overflow = 'hidden';
-
   // cleanup
   window.addEventListener('beforeunload', function () {
     if (detail) { try { detail.remove(); } catch (err) {} }
   });
 
-  // --------------- sheet drag implementation ---------------
+  // sheet drag (same implementation as before)
   function initSheetDrag(sheet) {
     if (!sheet) return;
     var startY = 0;
@@ -312,5 +296,22 @@ document.addEventListener('DOMContentLoaded', function () {
       imgwrap.addEventListener('touchstart', pointerDown, { passive: false });
     }
   }
-  // --------------- end sheet drag ---------------
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  var home = document.querySelector('.home-content');
+
+  // already set overflow:hidden & height:100vh
+  // add event-level locks to block scroll/drag but keep clicks working
+  function stop(e) { e.preventDefault(); }
+
+  // block touch/trackpad/scroll gestures on the home view
+  home.addEventListener('touchmove', stop, { passive: false });
+  home.addEventListener('wheel', stop, { passive: false });
+
+  // If you want to also block mouse dragging (desktop)
+  home.addEventListener('dragstart', stop, { passive: false });
+
+  // Important: do NOT block 'pointerdown' or 'click' — we still want taps.
 });
