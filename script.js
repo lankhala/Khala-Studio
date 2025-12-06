@@ -1,18 +1,12 @@
-// script.js — render 8 apps with required layouts & behaviors
-// Back button fixed at top-left for all apps; detail overlays no longer create their own back button.
-// - SM Digital: 4-per-row product tiles, detail overlay, buy -> t.me/smservicekh
-// - Design/Program: full-row images -> open telegram
-// - Library: 2-per-row book tiles (image + title) -> open telegram
-// - Software: 3-per-row tiles -> open telegram
-// - Freelance/News: empty state (no data)
-// - PNG: list of text items -> open telegram
-// Performance: cached selectors, delegation, rAF, lazy img attributes
+// script.js — updated: SM Digital panel renders an internal apps-grid that matches homepage layout (4 per row).
+// Internal anchors use same markup (.app + .app-icon + <span>) but are created only inside the panel.
+// Clicks on those internal anchors open the bottom-sheet detail (square image). Home icons remain unchanged.
 
 document.addEventListener('DOMContentLoaded', function () {
   var phoneElem = document.querySelector('.phone');
-  var appIcons = Array.from(document.querySelectorAll('.app'));
+  // capture only the home-level app anchors (initial, direct children of the top .apps-grid)
+  var homeAppIcons = Array.from(document.querySelectorAll('.apps-grid > a.app'));
   var appPanel = document.querySelector('.app-panel');
-  // find the pinned back button (class "fixed" added in HTML)
   var backBtn = document.querySelector('.back-btn.fixed');
   var appInner = document.querySelector('.app-inner');
   var appContent = document.querySelector('.app-content');
@@ -20,58 +14,31 @@ document.addEventListener('DOMContentLoaded', function () {
   var detail = null;
   var currentApp = null;
 
-  // Telegram base
   var TELEGRAM_BASE = 'https://t.me/smservicekh';
 
-  // sample datasets (images are placeholders; replace with your assets)
+  // SM Digital data (items shown as apps inside the panel)
+  // NOTE: added detailImg for the larger / alternate image shown in the 1x1 detail sheet.
   var DATA = {
     'sm-digital': [
-      { id: 'd1', name: 'Canva Pro 1 Year', price: '$4', img: 'canva.webp', desc: 'Canva Pro license (1 year)' },
-      { id: 'd2', name: 'Icon Pack', price: '$5', img: 'iconpack.jpg', desc: 'Set of 200 icons' },
-      { id: 'd3', name: 'Preset Pack', price: '$7', img: 'preset.jpg', desc: 'Color presets for editors' },
-      { id: 'd4', name: 'UI Kit', price: '$10', img: 'uikit.jpg', desc: 'Design components' },
-      { id: 'd5', name: 'Template Pack', price: '$6', img: 'template.jpg', desc: 'Website templates' },
-      { id: 'd6', name: 'Font Bundle', price: '$8', img: 'fontpack.jpg', desc: 'Handpicked fonts' },
-      { id: 'd7', name: 'Sticker Set', price: '$3', img: 'stickers.jpg', desc: 'Chat stickers' },
-      { id: 'd8', name: 'Mockup Kit', price: '$9', img: 'mockup.jpg', desc: 'Device mockups' }
+      { id: 'a1', name: 'Canva Pro', img: 'canvalogo.png', detailImg: 'canva.jpg', telegramUrl: 'https://t.me/sm_canva' },
+      { id: 'a2', name: 'Gemini Pro', img: 'geminilogo.png', detailImg: 'gemini.jpg', telegramUrl: 'https://t.me/sm_icons' },
+      { id: 'a3', name: 'CapCut Pro', img: 'capcutlogo.png', detailImg: 'capcut.png', telegramUrl: 'https://t.me/sm_presets' },
+      { id: 'a4', name: 'Freepik', img: 'freepiklogo.png', detailImg: 'freepik.png', telegramUrl: 'https://t.me/sm_uikit' },
+      // { id: 'a5', name: 'Templates', img: 'template.jpg', detailImg: 'template_detail.jpg', telegramUrl: 'https://t.me/sm_templates' },
+      // { id: 'a6', name: 'Fonts', img: 'fontpack.jpg', detailImg: 'fontpack_detail.jpg', telegramUrl: 'https://t.me/sm_fonts' },
+      // { id: 'a7', name: 'Stickers', img: 'stickers.jpg', detailImg: 'stickers_detail.jpg', telegramUrl: 'https://t.me/sm_stickers' },
+      // { id: 'a8', name: 'Mockups', img: 'mockup.jpg', detailImg: 'mockup_detail.jpg', telegramUrl: 'https://t.me/sm_mockups' }
     ],
-    'design': [
-      { id: 'g1', name: 'Poster A', img: 'design1.jpg', telegramText: 'Interested in Poster A' },
-      { id: 'g2', name: 'Poster B', img: 'design2.jpg', telegramText: 'Interested in Poster B' },
-      { id: 'g3', name: 'Flyer', img: 'design3.jpg', telegramText: 'Interested in Flyer' }
-    ],
-    'program': [
-      { id: 'p1', name: 'Script A', img: 'program1.jpg', telegramText: 'Interested in Script A' },
-      { id: 'p2', name: 'Tool B', img: 'program2.jpg', telegramText: 'Interested in Tool B' }
-    ],
-    'library': [
-      { id: 'b1', title: 'ទស្សនៈវិជ្ជាពិភពលោក', img: 'book1.jpg', telegramText: 'Interested in Book One' },
-      { id: 'b2', title: 'Book Two', img: 'book2.jpg', telegramText: 'Interested in Book Two' },
-      { id: 'b3', title: 'Book Three', img: 'book3.jpg', telegramText: 'Interested in Book Three' },
-      { id: 'b4', title: 'Book Four', img: 'book4.jpg', telegramText: 'Interested in Book Four' },
-      { id: 'b5', title: 'Book Five', img: 'book5.jpg', telegramText: 'Interested in Book Five' },
-      { id: 'b6', title: 'Book Six', img: 'book6.jpg', telegramText: 'Interested in Book Six' },
-      { id: 'b7', title: 'Book Seven', img: 'book7.jpg', telegramText: 'Interested in Book Seven' },
-      { id: 'b8', title: 'Book Eight', img: 'book8.jpg', telegramText: 'Interested in Book Eight' }
-    ],
-    'software': [
-      { id: 's1', name: 'Mobile App', price: '$15', img: 'soft1.jpg', desc: 'App license' },
-      { id: 's2', name: 'Desktop Tool', price: '$25', img: 'soft2.jpg', desc: 'Tool license' },
-      { id: 's3', name: 'Plugin', price: '$9', img: 'soft3.jpg', desc: 'Plugin license' },
-      { id: 's4', name: 'Theme', price: '$7', img: 'soft4.jpg', desc: 'Theme pack' }
-    ],
-    'freelance': [], // no data
-    'png': [
-      'PNG Asset 1',
-      'PNG Asset 2',
-      'PNG Asset 3',
-      'PNG Asset 4',
-      'PNG Asset 5'
-    ],
-    'news': [] // no data
+    // other apps (kept simple)
+    'design': [],
+    'program': [],
+    'library': [],
+    'software': [],
+    'freelance': [],
+    'png': [],
+    'news': []
   };
 
-  // helpers
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (m) {
       return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[m];
@@ -90,14 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
     appPanel.style.setProperty('--oy', cy + '%');
   }
 
-  function openPanelForApp(appId, label, iconEl) {
+  function openPanelForApp(appId, iconEl) {
     currentApp = appId;
     setPanelOriginFromIcon(iconEl);
     renderAppContent(appId);
     requestAnimationFrame(function () {
       appPanel.classList.add('open');
       appPanel.setAttribute('aria-hidden', 'false');
-      // keep body locked; the pinned back button is inside the panel and does not scroll with .app-inner
       document.body.style.overflow = 'hidden';
     });
   }
@@ -105,242 +71,161 @@ document.addEventListener('DOMContentLoaded', function () {
   function closePanel() {
     var det = document.querySelector('.sm-detail.open');
     if (det) {
-      det.classList.remove('open');
-      det.setAttribute('aria-hidden', 'true');
+      closeDetail();
       return;
     }
     appPanel.classList.remove('open');
     appPanel.setAttribute('aria-hidden', 'true');
-    // keep body locked (home content already internally managed)
     document.body.style.overflow = 'hidden';
     currentApp = null;
   }
 
-  // render per app
-  function renderAppContent(appId) {
-    appContent.innerHTML = '';
-    if (appId === 'sm-digital') renderSmDigital();
-    else if (appId === 'design') renderGallery('design');
-    else if (appId === 'program') renderGallery('program');
-    else if (appId === 'library') renderLibrary();
-    else if (appId === 'software') renderSoftware();
-    else if (appId === 'freelance' || appId === 'news') renderEmpty(appId);
-    else if (appId === 'png') renderPngList();
-    else renderEmpty(appId);
-  }
-
-  /* SM Digital: 4 per row grid */
-  function renderSmDigital() {
-    var grid = document.createElement('div');
-    grid.className = 'tiles sm-digital';
-    DATA['sm-digital'].forEach(function (p) {
-      var t = document.createElement('div');
-      t.className = 'tile';
-      t.setAttribute('data-id', p.id);
-      t.innerHTML = ''
-        + '<img src="' + p.img + '" alt="' + escapeHtml(p.name) + '" loading="lazy">'
-        + '<div class="title">' + escapeHtml(p.name) + '</div>'
-        + '<div class="subtitle">' + escapeHtml(p.desc) + '</div>'
-        + '<div class="row"><div class="price">' + escapeHtml(p.price) + '</div><button class="buy-btn" data-name="' + escapeHtml(p.name) + '">Buy</button></div>';
-      grid.appendChild(t);
-    });
-    appContent.appendChild(grid);
-
-    // delegated click for tile or buy
-    grid.addEventListener('click', function (e) {
-      var tile = e.target.closest('.tile');
-      if (!tile) return;
-      if (e.target.matches('.buy-btn')) {
-        var name = e.target.getAttribute('data-name') || tile.querySelector('.title').textContent;
-        openTelegramForPurchase(name);
-      } else {
-        openDetail('sm-digital', tile.getAttribute('data-id'));
-      }
-    }, { passive: true });
-  }
-
-  function openDetail(appId, itemId) {
-    var source = DATA[appId] || [];
-    var item = source.find(function (x) { return x.id === itemId; });
-    if (!item) return;
-    ensureDetailExists();
-    var imgEl = detail.querySelector('.sm-detail-img');
-    var nameEl = detail.querySelector('.sm-detail-name');
-    var priceEl = detail.querySelector('.sm-detail-price');
-    var descEl = detail.querySelector('.sm-detail-desc');
-    var buyBtn = detail.querySelector('.sm-detail-buy');
-
-    imgEl.src = item.img;
-    imgEl.alt = item.name;
-    nameEl.textContent = item.name || '';
-    priceEl.textContent = item.price || '';
-    descEl.textContent = item.desc || '';
-    buyBtn.dataset.name = item.name || '';
-    detail.classList.add('open');
-    detail.setAttribute('aria-hidden', 'false');
-  }
-
+  /* DETAIL: bottom-sheet with square image and draggable behavior */
   function ensureDetailExists() {
     if (detail) return;
     detail = document.createElement('div');
     detail.className = 'sm-detail';
-    // NOTE: removed internal back button so fixed back button (top-left) is used consistently
+    detail.setAttribute('aria-hidden', 'true');
     detail.innerHTML = ''
-      + '<div class="sm-detail-overlay"></div>'
-      + '<div class="sm-detail-sheet">'
+      + '<div class="sm-detail-overlay" data-role="overlay"></div>'
+      + '<div class="sm-detail-sheet" role="dialog" aria-modal="true" aria-label="Item details">'
+      +   '<div class="sm-detail-handle" aria-hidden="true"></div>'
       +   '<div class="sm-detail-body">'
-      +     '<img class="sm-detail-img" src="" alt="" style="width:100%;border-radius:8px;margin-bottom:8px;">'
-      +     '<div class="sm-detail-name" style="font-weight:700;font-size:16px;margin-bottom:6px;"></div>'
-      +     '<div class="sm-detail-price" style="color:#2563eb;font-weight:700;margin-bottom:8px;"></div>'
-      +     '<p class="sm-detail-desc" style="color:#374151;margin-bottom:12px;"></p>'
-      +     '<button class="sm-detail-buy buy-btn" type="button">Buy via Telegram</button>'
+      +     '<div class="sm-detail-imgwrap"><img class="sm-detail-img" src="" alt="" loading="lazy" draggable="false"></div>'
+      +     '<div class="sm-detail-name"></div>'
+      +     '<div class="sm-detail-desc"></div>'
+      +     '<div class="sm-detail-actions"><button class="sm-detail-buy buy-btn" type="button">Buy Now</button></div>'
       +   '</div>'
       + '</div>';
     document.body.appendChild(detail);
 
-    // buy button behavior
+    // overlay click closes
+    detail.querySelector('.sm-detail-overlay').addEventListener('click', function () {
+      closeDetail();
+    }, { passive: true });
+
     detail.querySelector('.sm-detail-buy').addEventListener('click', function () {
-      var name = this.dataset.name || '';
-      openTelegramForPurchase(name);
+      var url = this.dataset.telegramUrl || TELEGRAM_BASE;
+      window.open(url, '_blank');
+    });
+
+    // make sheet draggable
+    initSheetDrag(detail.querySelector('.sm-detail-sheet'));
+  }
+
+  function openDetailFor(item) {
+    ensureDetailExists();
+    var imgEl = detail.querySelector('.sm-detail-img');
+    var nameEl = detail.querySelector('.sm-detail-name');
+    var descEl = detail.querySelector('.sm-detail-desc');
+    var buyBtn = detail.querySelector('.sm-detail-buy');
+
+    // Prefer detailImg (alternate/large image) if provided, otherwise fall back to item.img (the small/logo)
+    var detailSrc = item.detailImg || item.img || '';
+
+    if (detailSrc) {
+      imgEl.src = detailSrc;
+      imgEl.alt = item.name || item.title || '';
+      imgEl.style.display = '';
+    } else {
+      imgEl.style.display = 'none';
+      imgEl.removeAttribute('src'); imgEl.alt = '';
+    }
+
+    nameEl.textContent = item.name || item.title || '';
+    descEl.textContent = item.desc || item.telegramText || '';
+
+    var tg = item.telegramUrl;
+    if (!tg) {
+      var text = item.telegramText || nameEl.textContent;
+      tg = TELEGRAM_BASE + '?text=' + encodeURIComponent(String(text || 'Hello'));
+    }
+    buyBtn.dataset.telegramUrl = tg;
+
+    // reset inline transform and open
+    var sheet = detail.querySelector('.sm-detail-sheet');
+    sheet.style.transition = '';
+    sheet.style.transform = '';
+    requestAnimationFrame(function () {
+      detail.classList.add('open');
+      detail.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
     });
   }
 
-  function openTelegramForPurchase(name) {
-    var text = name ? ('Hello SM service! I want to buy: ' + name) : 'Hello SM service!';
-    var url = TELEGRAM_BASE + '?text=' + encodeURIComponent(text);
-    window.open(url, '_blank');
+  function closeDetail() {
+    if (!detail) return;
+    var sheet = detail.querySelector('.sm-detail-sheet');
+    sheet.style.transition = 'transform 320ms cubic-bezier(.22,.61,.36,1)';
+    sheet.style.transform = '';
+    detail.classList.remove('open');
+    detail.setAttribute('aria-hidden', 'true');
+    setTimeout(function () {}, 320);
   }
 
-  /* Design & Program: render full-row images; open telegram with message */
-  function renderGallery(key) {
-    var tiles = document.createElement('div');
-    tiles.className = 'tiles fullrow';
-    (DATA[key] || []).forEach(function (it) {
-      var t = document.createElement('div');
-      t.className = 'tile';
-      t.setAttribute('data-id', it.id);
-      t.innerHTML = ''
-        + '<img src="' + it.img + '" alt="' + escapeHtml(it.name) + '" loading="lazy">'
-        + '<div class="title">' + escapeHtml(it.name) + '</div>'
-        + '<div class="row"><button class="buy-btn" data-text="' + escapeHtml(it.telegramText || it.name) + '">Contact</button></div>';
-      tiles.appendChild(t);
-    });
-    appContent.appendChild(tiles);
-
-    tiles.addEventListener('click', function (e) {
-      var btn = e.target.closest('.buy-btn');
-      if (btn) {
-        var text = btn.dataset.text || 'Hello SM service!';
-        window.open(TELEGRAM_BASE + '?text=' + encodeURIComponent(text), '_blank');
-      }
-    }, { passive: true });
+  /* render per app (SM Digital uses same apps-grid markup as home) */
+  function renderAppContent(appId) {
+    appContent.innerHTML = '';
+    if (appId === 'sm-digital') renderSmDigitalUsingTemplate();
+    else renderEmpty(appId);
   }
 
-  /* Library: 2-per-row book tiles with image+title */
-  function renderLibrary() {
+  function renderSmDigitalUsingTemplate() {
+    // create a grid with the exact same markup as homepage .apps-grid
     var grid = document.createElement('div');
-    grid.className = 'tiles library';
-    (DATA['library'] || []).forEach(function (b) {
-      var t = document.createElement('div');
-      t.className = 'tile';
-      t.setAttribute('data-id', b.id || b.title);
-      t.innerHTML = ''
-        + '<img src="' + b.img + '" alt="' + escapeHtml(b.title) + '" loading="lazy">'
-        + '<div class="title">' + escapeHtml(b.title) + '</div>'
-        + '<div class="row"><button class="buy-btn" data-text="' + escapeHtml(b.telegramText) + '">Details</button></div>';
-      grid.appendChild(t);
+    grid.className = 'apps-grid';
+    grid.setAttribute('aria-hidden', 'false');
+
+    DATA['sm-digital'].forEach(function (p) {
+      var a = document.createElement('a');
+      a.href = '#';
+      a.className = 'app1';
+      // mark internal id so home-level listeners (which were bound at load) won't accidentally handle these
+      a.setAttribute('data-item', p.id);
+      a.innerHTML = ''
+        + '<div class="app-icon1"><img src="' + p.img + '" alt="' + escapeHtml(p.name) + '" loading="lazy" draggable="false"></div>'
+        + '<span>' + escapeHtml(p.name) + '</span>';
+      grid.appendChild(a);
     });
+
     appContent.appendChild(grid);
 
+    // bind clicks for internal anchors only (prevent propagation to home anchors)
     grid.addEventListener('click', function (e) {
-      var btn = e.target.closest('.buy-btn');
-      if (btn) {
-        var text = btn.dataset.text || 'Hello SM service!';
-        window.open(TELEGRAM_BASE + '?text=' + encodeURIComponent(text), '_blank');
-      }
+      var a = e.target.closest('a.app1');
+      if (!a) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var id = a.getAttribute('data-item');
+      var item = DATA['sm-digital'].find(function (x) { return x.id === id; });
+      if (!item) return;
+      openDetailFor(item);
     }, { passive: true });
   }
 
-  /* Software: 3-per-row tiles similar to SM Digital but 3 columns */
-  function renderSoftware() {
-    var grid = document.createElement('div');
-    grid.className = 'tiles software';
-    (DATA['software'] || []).forEach(function (p) {
-      var t = document.createElement('div');
-      t.className = 'tile';
-      t.setAttribute('data-id', p.id);
-      t.innerHTML = ''
-        + '<img src="' + p.img + '" alt="' + escapeHtml(p.name) + '" loading="lazy">'
-        + '<div class="title">' + escapeHtml(p.name) + '</div>'
-        + '<div class="subtitle">' + escapeHtml(p.desc) + '</div>'
-        + '<div class="row"><div class="price">' + escapeHtml(p.price) + '</div><button class="buy-btn" data-name="' + escapeHtml(p.name) + '">Buy</button></div>';
-      grid.appendChild(t);
-    });
-    appContent.appendChild(grid);
-
-    grid.addEventListener('click', function (e) {
-      var btn = e.target.closest('.buy-btn');
-      if (btn) {
-        var name = btn.dataset.name || '';
-        openTelegramForPurchase(name);
-        return;
-      }
-      var tile = e.target.closest('.tile');
-      if (tile) {
-        var id = tile.getAttribute('data-id');
-        openDetail('software', id);
-      }
-    }, { passive: true });
-  }
-
-  /* PNG: list of text items -> open telegram with text */
-  function renderPngList() {
-    var ul = document.createElement('ul');
-    ul.className = 'png-list';
-    (DATA['png'] || []).forEach(function (text, idx) {
-      var li = document.createElement('li');
-      li.textContent = text;
-      li.setAttribute('data-text', text);
-      ul.appendChild(li);
-    });
-    appContent.appendChild(ul);
-
-    ul.addEventListener('click', function (e) {
-      var li = e.target.closest('li');
-      if (!li) return;
-      var txt = li.getAttribute('data-text') || li.textContent;
-      window.open(TELEGRAM_BASE + '?text=' + encodeURIComponent('Hello SM service! ' + txt), '_blank');
-    }, { passive: true });
-  }
-
-  /* Empty state for freelance/news */
   function renderEmpty(appId) {
     var d = document.createElement('div');
     d.className = 'empty';
-    d.innerHTML = '<strong>' + escapeHtml(capitalize(appId || 'App')) + '</strong><p style="margin-top:8px;color:#cbd5e1;">No data available.</p>';
+    d.innerHTML = '<strong>' + escapeHtml(capitalize(appId || 'App')) + '</strong><p style="margin-top:8px;color:#cbd5e1;">កម្មវិធីកំពុងអាប់ដេត...</p>';
     appContent.appendChild(d);
   }
 
   function capitalize(s) { return String(s).charAt(0).toUpperCase() + String(s).slice(1); }
 
-  // attach app icons
-  appIcons.forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      var id = a.getAttribute('data-app') || 'app';
-      openPanelForApp(id, null, a);
+  // bind only the original home icons to open the panel
+  homeAppIcons.forEach(function (el) {
+    el.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var id = el.getAttribute('data-app') || 'app1';
+      openPanelForApp(id, el);
     }, { passive: true });
   });
 
-  // back button uses single fixed control for all panels and details
+  // back button
   if (backBtn) {
     backBtn.addEventListener('click', function () {
       var det = document.querySelector('.sm-detail.open');
-      if (det) {
-        det.classList.remove('open');
-        det.setAttribute('aria-hidden', 'true');
-        return;
-      }
+      if (det) { closeDetail(); return; }
       closePanel();
     });
   }
@@ -349,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       var det = document.querySelector('.sm-detail.open');
-      if (det) { det.classList.remove('open'); det.setAttribute('aria-hidden', 'true'); return; }
+      if (det) { closeDetail(); return; }
       if (appPanel.classList.contains('open')) closePanel();
     }
   });
@@ -357,9 +242,69 @@ document.addEventListener('DOMContentLoaded', function () {
   // keep body locked on home initially
   document.body.style.overflow = 'hidden';
 
-  // cleanup detail on unload
+  // cleanup
   window.addEventListener('beforeunload', function () {
     if (detail) { try { detail.remove(); } catch (err) {} }
   });
 
+  // --------------- sheet drag implementation ---------------
+  function initSheetDrag(sheet) {
+    if (!sheet) return;
+    var startY = 0;
+    var currentY = 0;
+    var dragging = false;
+    var sheetHeight = 0;
+
+    function pointerDown(e) {
+      var target = e.target;
+      if (!(target.closest('.sm-detail-handle') || target.closest('.sm-detail-imgwrap') || target.closest('.sm-detail-img'))) {
+        return;
+      }
+      dragging = true;
+      startY = (e.touches ? e.touches[0].clientY : e.clientY);
+      currentY = 0;
+      sheetHeight = sheet.offsetHeight || window.innerHeight * 0.75;
+      sheet.style.transition = '';
+      document.addEventListener('pointermove', pointerMove, { passive: false });
+      document.addEventListener('pointerup', pointerUp, { passive: true });
+      document.addEventListener('touchmove', pointerMove, { passive: false });
+      document.addEventListener('touchend', pointerUp, { passive: true });
+      e.preventDefault();
+    }
+
+    function pointerMove(e) {
+      if (!dragging) return;
+      var y = (e.touches ? e.touches[0].clientY : e.clientY);
+      currentY = Math.max(0, y - startY);
+      sheet.style.transform = 'translateY(' + currentY + 'px)';
+      e.preventDefault();
+    }
+
+    function pointerUp() {
+      if (!dragging) return;
+      dragging = false;
+      var threshold = (sheetHeight || window.innerHeight * 0.75) * 0.25;
+      sheet.style.transition = 'transform 220ms cubic-bezier(.22,.61,.36,1)';
+      if (currentY > threshold) {
+        sheet.style.transform = 'translateY(100%)';
+        setTimeout(function () { closeDetail(); }, 220);
+      } else {
+        sheet.style.transform = '';
+      }
+      document.removeEventListener('pointermove', pointerMove);
+      document.removeEventListener('pointerup', pointerUp);
+      document.removeEventListener('touchmove', pointerMove);
+      document.removeEventListener('touchend', pointerUp);
+    }
+
+    sheet.addEventListener('pointerdown', pointerDown, { passive: false });
+    sheet.addEventListener('touchstart', pointerDown, { passive: false });
+
+    var imgwrap = sheet.querySelector('.sm-detail-imgwrap');
+    if (imgwrap) {
+      imgwrap.addEventListener('pointerdown', pointerDown, { passive: false });
+      imgwrap.addEventListener('touchstart', pointerDown, { passive: false });
+    }
+  }
+  // --------------- end sheet drag ---------------
 });
