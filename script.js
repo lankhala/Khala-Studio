@@ -20,14 +20,20 @@ document.addEventListener('DOMContentLoaded', function () {
   // NOTE: added detailImg for the larger / alternate image shown in the 1x1 detail sheet.
   var DATA = {
     'sm-digital': [
-      { id: 'a1', name: 'Canva Pro', img: 'canvalogo.png', detailImg: 'canva.jpg', telegramUrl: 'https://t.me/sm_canva' },
-      { id: 'a2', name: 'Gemini Pro', img: 'geminilogo.png', detailImg: 'gemini.jpg', telegramUrl: 'https://t.me/sm_icons' },
-      { id: 'a3', name: 'CapCut Pro', img: 'capcutlogo.png', detailImg: 'capcut.png', telegramUrl: 'https://t.me/sm_presets' },
-      { id: 'a4', name: 'Freepik', img: 'freepiklogo.png', detailImg: 'freepik.png', telegramUrl: 'https://t.me/sm_uikit' },
-      // { id: 'a5', name: 'Templates', img: 'template.jpg', detailImg: 'template_detail.jpg', telegramUrl: 'https://t.me/sm_templates' },
-      // { id: 'a6', name: 'Fonts', img: 'fontpack.jpg', detailImg: 'fontpack_detail.jpg', telegramUrl: 'https://t.me/sm_fonts' },
-      // { id: 'a7', name: 'Stickers', img: 'stickers.jpg', detailImg: 'stickers_detail.jpg', telegramUrl: 'https://t.me/sm_stickers' },
-      // { id: 'a8', name: 'Mockups', img: 'mockup.jpg', detailImg: 'mockup_detail.jpg', telegramUrl: 'https://t.me/sm_mockups' }
+      { id: 'a1', name: 'Canva Pro', img: 'canvalogo.png', detailImg: 'canva.jpg', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a2', name: 'Gemini Pro', img: 'geminilogo.png', detailImg: 'gemini.jpg', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a3', name: 'CapCut Pro', img: 'capcutlogo.png', detailImg: 'capcut.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a4', name: 'Freepik', img: 'freepiklogo.png', detailImg: 'freepik.png', telegramUrl: 'https://t.me/smservicekh' },
+      
+      { id: 'a5', name: 'ChatGPT', img: 'chatgptlogo.png', detailImg: 'chatgpt.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a6', name: 'Window11', img: 'windowlogo.png', detailImg: 'window.jpg', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a7', name: 'Netflix', img: 'netflixlogo.png', detailImg: 'netflix.jpg', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a8', name: 'Adobe', img: 'adobelogo.png', detailImg: 'adobe.png', telegramUrl: 'https://t.me/smservicekh' },
+
+      { id: 'a9', name: 'Flow AI', img: 'flowlogo.png', detailImg: 'flow.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a10', name: 'Office365', img: 'office365logo.png', detailImg: 'office365.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a11', name: 'YouTube', img: 'youtubelogo.png', detailImg: 'youtube.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a12', name: 'IDM', img: 'idmlogo.png', detailImg: 'idm.png', telegramUrl: 'https://t.me/smservicekh' }
     ],
     // other apps (kept simple)
     'design': [],
