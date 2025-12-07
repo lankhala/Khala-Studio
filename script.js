@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'sm-digital': [
       { id: 'a1', name: 'Canva Pro', img: 'canvalogo.png', detailImg: 'canva.jpg', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a2', name: 'Gemini Pro', img: 'geminilogo.png', detailImg: 'gemini.jpg', telegramUrl: 'https://t.me/smservicekh' },
-      { id: 'a3', name: 'CapCut Pro', img: 'capcutlogo.png', detailImg: 'capcut.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a3', name: 'CapCut', img: 'capcutlogo.png', detailImg: 'capcut.png', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a4', name: 'Freepik', img: 'freepiklogo.png', detailImg: 'freepik.png', telegramUrl: 'https://t.me/smservicekh' },
 
       { id: 'a5', name: 'ChatGPT', img: 'chatgptlogo.png', detailImg: 'chatgpt.png', telegramUrl: 'https://t.me/smservicekh' },
