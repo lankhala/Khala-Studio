@@ -29,7 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
       { id: 'a9', name: 'YouTube', img: 'youtubelogo.png', detailImg: 'youtube.png', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a10', name: 'Flow AI', img: 'flowlogo.png', detailImg: 'flow.png', telegramUrl: 'https://t.me/smservicekh' },
       { id: 'a11', name: 'IDM', img: 'idmlogo.png', detailImg: 'idm.png', telegramUrl: 'https://t.me/smservicekh' },
-      { id: 'a12', name: 'Office 365', img: 'office365logo.png', detailImg: 'office365.png', telegramUrl: 'https://t.me/smservicekh' }
+      { id: 'a12', name: 'Office 365', img: 'office365logo.png', detailImg: 'office365.png', telegramUrl: 'https://t.me/smservicekh' },
+
+      { id: 'a13', name: 'Kaspersky', img: 'kasperskylogo.png', detailImg: '404.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a14', name: 'Drive', img: 'drivelogo.png', detailImg: '404.png', telegramUrl: 'https://t.me/smservicekh' },
+      { id: 'a15', name: 'OneDrive', img: 'onedrivelogo.png', detailImg: '404.png', telegramUrl: 'https://t.me/smservicekh' }
     ],
     'design': [], 'program': [], 'library': [], 'software': [], 'freelance': [], 'png': [], 'news': []
   };
@@ -89,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
       +     '<div class="sm-detail-imgwrap"><img class="sm-detail-img" src="" alt="" loading="lazy" draggable="false"></div>'
       +     '<div class="sm-detail-name"></div>'
       +     '<div class="sm-detail-desc"></div>'
-      +     '<div class="sm-detail-actions"><button class="sm-detail-buy buy-btn" type="button">Buy Now</button></div>'
+      +     '<div class="sm-detail-actions"><button class="sm-detail-buy buy-btn" type="button">Shop</button></div>'
       +   '</div>'
       + '</div>';
     document.body.appendChild(detail);
