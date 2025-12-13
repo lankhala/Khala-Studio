@@ -26,17 +26,44 @@ document.addEventListener('DOMContentLoaded', function () {
     ],
     'library': {
       categories: [
-        {
-          id: 'សម្រាប់អ្នក',
-          title: 'បានណែនាំសម្រាប់អ្នក',
-          items: [
-            { id: 'b1', name: 'ការខិតខំក្លែងក្លាយ', img: 'book1.jpg', detailImg: 'book1-detail.jpg',  desc: 'សេចក្តីពិពណ៌នា សៀវភៅ A', telegramUrl: TELEGRAM_BASE },
-            { id: 'b2', name: 'យកឈ្នះភាពភ័យខ្លាច', img: 'book3.jpg', detailImg: 'book2-detail.jpg',  desc: 'សេចក្តីពិពណ៌នា សៀវភៅ B', telegramUrl: TELEGRAM_BASE },
-            { id: 'b3', name: 'គ្មានជម្រើស', img: 'book2.jpg', detailImg: 'book3-detail.jpg',  desc: 'សេចក្តីពិពណ៌នា សៀវភៅ C', telegramUrl: TELEGRAM_BASE },
-            { id: 'b4', name: 'អំណាចនៃផ្នត់គំនិត', img: 'book4.jpg', detailImg: 'book4-detail.jpg',  desc: 'សេចក្តីពិពណ៌នា សៀវភៅ D', telegramUrl: TELEGRAM_BASE }
-          ]
-        },
+    {
+      id: 'សម្រាប់អ្នក',
+      title: 'បានណែនាំសម្រាប់អ្នក',
+      items: [
+        { id: 'b1', name: 'ការខិតខំក្លែងក្លាយ', img: 'book1.jpg',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ A',
+          telegramUrl: 'https://t.me/DigitalBookKH/1' },
+
+        { id: 'b2', name: 'គ្មានជម្រើស', img: 'book2.jpg',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ B',
+          telegramUrl: 'https://t.me/DigitalBookKH/2' },
+
+        { id: 'b3', name: 'យកឈ្នះភាពភ័យខ្លាច', img: 'book3.jpg',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ C',
+          telegramUrl: 'https://t.me/DigitalBookKH/3' },
+
+        { id: 'b4', name: 'អំណាចនៃផ្នត់គំនិត', img: 'book4.jpg',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ D',
+          telegramUrl: 'https://t.me/DigitalBookKH/4' },
+
+          { id: 'b5', name: 'អាថកំបាំងភាពជោគជ័យ', img: 'book5.webp',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ A',
+          telegramUrl: 'https://t.me/DigitalBookKH/1' },
+
+        { id: 'b6', name: 'ដឹមេជិក', img: 'book6.webp',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ B',
+          telegramUrl: 'https://t.me/DigitalBookKH/2' },
+
+        { id: 'b7', name: 'ថាមពលស្ត្រី', img: 'book7.webp',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ C',
+          telegramUrl: 'https://t.me/DigitalBookKH/3' },
+
+        { id: 'b8', name: 'យុទ្ធសាស្រ្តទម្លុះគោលដៅ', img: 'book8.webp',
+          desc: 'សេចក្តីពិពណ៌នា សៀវភៅ D',
+          telegramUrl: 'https://t.me/DigitalBookKH/4' }
       ]
+    }
+  ]
     },
     'design': [], 'program': [], 'software': [], 'freelance': [], 'png': [], 'news': []
   };
@@ -302,13 +329,15 @@ document.addEventListener('DOMContentLoaded', function () {
       contentArea.appendChild(grid);
 
       grid.addEventListener('click', function (ev) {
-        var a = ev.target.closest('a.book-tile');
-        if (!a) return;
-        ev.preventDefault();
-        var id = a.getAttribute('data-item');
-        var item = findLibraryItemById(id);
-        if (item) openDetailFor(item);
-      }, { passive: false });
+  var a = ev.target.closest('a.book-tile');
+  if (!a) return;
+  ev.preventDefault();
+  var id = a.getAttribute('data-item');
+  var item = findLibraryItemById(id);
+  if (item && item.telegramUrl) {
+    window.open(item.telegramUrl, '_blank'); // បើក Telegram link តែម្តង
+  }
+}, { passive: false });
     }
 
     function renderLibraryDefault() {
@@ -340,14 +369,16 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       contentArea.querySelectorAll('.category-carousel').forEach(function (c) {
-        c.addEventListener('click', function (ev) {
-          var a = ev.target.closest('a.book-small');
-          if (!a) return;
-          ev.preventDefault();
-          var id = a.getAttribute('data-item');
-          var item = findLibraryItemById(id);
-          if (item) openDetailFor(item);
-        }, { passive: false });
+       c.addEventListener('click', function (ev) {
+  var a = ev.target.closest('a.book-small');
+  if (!a) return;
+  ev.preventDefault();
+  var id = a.getAttribute('data-item');
+  var item = findLibraryItemById(id);
+  if (item && item.telegramUrl) {
+    window.open(item.telegramUrl, '_blank');
+  }
+}, { passive: false });
       });
 
       contentArea.querySelectorAll('.see-all').forEach(function (btn) {
@@ -359,45 +390,122 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    function openSeeAllForCategory(catId) {
-      var cat = DATA['library'].categories.find(function (c) { return c.id === catId; });
-      if (!cat) return;
-      var panel = document.createElement('div');
-      panel.className = 'category-panel';
-      panel.innerHTML = ''
-        + '<div class="category-panel-header"><button class="category-back" aria-label="Back">‹</button><strong>' + escapeHtml(cat.title) + '</strong></div>'
-        + '<div class="category-panel-body"></div>';
-      appContent.appendChild(panel);
 
-      var body = panel.querySelector('.category-panel-body');
-      var grid = document.createElement('div');
-      grid.className = 'category-grid two-cols';
-      cat.items.forEach(function (it) {
-        var a = document.createElement('a');
-        a.href = '#';
-        a.className = 'book-tile';
-        a.setAttribute('data-item', it.id);
-        a.innerHTML = ''
-          + '<div class="book-cover"><img src="' + escapeHtml(it.img) + '" alt="' + escapeHtml(it.name) + '" loading="lazy"></div>'
-          + '<div class="book-title">' + escapeHtml(it.name) + '</div>';
-        grid.appendChild(a);
-      });
-      body.appendChild(grid);
 
-      panel.querySelector('.category-back').addEventListener('click', function (ev) {
-        ev.preventDefault();
-        panel.remove();
-      }, { passive: false });
 
-      grid.addEventListener('click', function (ev) {
-        var a = ev.target.closest('a.book-tile');
-        if (!a) return;
-        ev.preventDefault();
-        var id = a.getAttribute('data-item');
-        var item = findLibraryItemById(id);
-        if (item) openDetailFor(item);
-      }, { passive: false });
+
+
+
+
+
+
+function openSeeAllForCategory(catId) {
+  var cat = DATA['library'].categories.find(c => c.id === catId);
+  if (!cat) return;
+
+  var panel = document.createElement('div');
+  panel.className = 'category-fullpanel';
+  panel.innerHTML = `
+    <div class="category-fullpanel-header">
+      <button class="back-btn fixed" type="button" aria-label="Back">
+        <img src="backicon.png" alt="Back">
+      </button>
+      <strong>សៀវភៅទាំងអស់</strong>
+    </div>
+    <div class="library-search-row">
+      <div class="library-search">
+        <input type="text" placeholder="ស្វែងរកសៀវភៅ..." aria-label="Search books">
+        <button class="library-search-toggle"><img src="search-icon.png" alt="search"></button>
+      </div>
+    </div>
+    <div class="category-fullpanel-body">
+      <div class="category-grid two-cols"></div>
+    </div>
+  `;
+  document.body.appendChild(panel); // overlay on body
+
+  var grid = panel.querySelector('.category-grid');
+  // Collect all books across categories
+  var allItems = [];
+  DATA['library'].categories.forEach(c => { allItems = allItems.concat(c.items); });
+  renderGrid(allItems);
+
+  // Back button → slide out then remove
+  panel.querySelector('.back-btn.fixed').addEventListener('click', ev => {
+    ev.preventDefault();
+    panel.style.animation = 'slideOutRightFade 0.3s ease forwards';
+    setTimeout(() => panel.remove(), 300);
+  });
+
+  // Click book → Telegram link
+  grid.addEventListener('click', ev => {
+    var a = ev.target.closest('a.book-tile');
+    if (!a) return;
+    ev.preventDefault();
+    var id = a.getAttribute('data-item');
+    var item = findLibraryItemById(id);
+    if (item && item.telegramUrl) {
+      window.open(item.telegramUrl, '_blank');
     }
+  });
+
+  // Search behavior
+  var searchInput = panel.querySelector('.library-search input');
+  var searchBtn   = panel.querySelector('.library-search-toggle');
+  var searchActive = false;
+
+  searchBtn.addEventListener('click', function (ev) {
+    ev.preventDefault();
+    searchActive = !searchActive;
+    if (searchActive) {
+      searchBtn.querySelector('img').src = 'close-icon.png';
+      searchInput.focus();
+      doSearch(searchInput.value.trim());
+    } else {
+      searchBtn.querySelector('img').src = 'search-icon.png';
+      searchInput.value = '';
+      renderGrid(allItems);
+    }
+  }, { passive: false });
+
+  searchInput.addEventListener('input', function () {
+    if (!searchActive) return;
+    doSearch(this.value.trim());
+  });
+
+  function doSearch(q) {
+    var ql = String(q || '').toLowerCase();
+    if (!ql) { renderGrid(allItems); return; }
+    var filtered = allItems.filter(it =>
+      String(it.name || '').toLowerCase().indexOf(ql) !== -1 ||
+      (it.caption && it.caption.toLowerCase().indexOf(ql) !== -1)
+    );
+    renderGrid(filtered);
+  }
+
+  function renderGrid(items) {
+    grid.innerHTML = '';
+    items.forEach(it => {
+      var a = document.createElement('a');
+      a.href = '#';
+      a.className = 'book-tile';
+      a.setAttribute('data-item', it.id);
+      a.innerHTML = `
+        <div class="book-cover"><img src="${escapeHtml(it.img)}" alt="${escapeHtml(it.name)}"></div>
+        <div class="book-title">${escapeHtml(it.name)}</div>
+      `;
+      grid.appendChild(a);
+    });
+  }
+}
+
+
+
+
+  
+
+
+
 
     function findLibraryItemById(id) {
       var found = null;
@@ -408,8 +516,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       return found;
     }
-
-
     var menuGrid = document.createElement('div');
 menuGrid.className = 'library-menu-grid';
 menuGrid.innerHTML = `
